@@ -957,6 +957,52 @@
     const inviteAudioTargetVolume = 0.35;
     inviteAudio.volume = 0.02;
 
+    function buildUploadCandidates(path) {
+      const out = new Set();
+      const exts = [".webp", ".WEBP", ".png", ".PNG", ".jpg", ".JPG", ".jpeg", ".JPEG"];
+      out.add(path);
+      const slash = path.lastIndexOf("/");
+      if (slash === -1) return Array.from(out);
+      const dir = path.slice(0, slash + 1);
+      const file = path.slice(slash + 1);
+      const dot = file.lastIndexOf(".");
+      const base = dot > -1 ? file.slice(0, dot) : file;
+      const upperBase = base.replace(/^img_/, "IMG_").replace(/^img/, "IMG");
+      const lowerBase = base.replace(/^IMG_/, "img_").replace(/^IMG/, "img");
+      [base, upperBase, lowerBase].forEach((b) => {
+        exts.forEach((ext) => out.add(`${dir}${b}${ext}`));
+      });
+      return Array.from(out);
+    }
+
+    function setImgWithFallback(imgEl, candidates, altText) {
+      if (!imgEl || !candidates?.length) return;
+      if (altText) imgEl.alt = altText;
+      let i = 0;
+      const tryNext = () => {
+        if (i >= candidates.length) return;
+        imgEl.src = candidates[i++];
+      };
+      imgEl.onerror = tryNext;
+      tryNext();
+    }
+
+    function setBackgroundWithFallback(el, candidates, styleBuilder) {
+      if (!el || !candidates?.length) return;
+      let i = 0;
+      const probe = new Image();
+      const tryNext = () => {
+        if (i >= candidates.length) return;
+        const candidate = candidates[i++];
+        probe.onload = () => {
+          el.style.background = styleBuilder(candidate);
+        };
+        probe.onerror = tryNext;
+        probe.src = candidate;
+      };
+      tryNext();
+    }
+
     function fadeInInviteAudio(durationMs = 3200) {
       const startVolume = 0.02;
       const targetVolume = inviteAudioTargetVolume;
@@ -991,6 +1037,11 @@
     }
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     document.body.classList.add("invite-locked");
+    setBackgroundWithFallback(
+      inviteSeal,
+      buildUploadCandidates("./uploads/img.webp"),
+      (src) => `url("${src}") center/cover no-repeat`
+    );
     inviteSeal?.addEventListener("click", () => {
       inviteAudio.currentTime = 0;
       inviteAudio.play().then(() => {
@@ -1002,10 +1053,10 @@
     const weddingDate = new Date("2026-07-24T14:00:00+07:00").getTime();
 
     const sliderImages = [
-      ["./uploads/img_0509.webp", "./uploads/IMG_0509.webp"],
-      ["./uploads/img_0510.webp", "./uploads/IMG_0510.webp"],
-      ["./uploads/img_0511.webp", "./uploads/IMG_0511.webp"],
-      ["./uploads/img_0513.webp", "./uploads/IMG_0513.webp"]
+      buildUploadCandidates("./uploads/img_0509.webp"),
+      buildUploadCandidates("./uploads/img_0510.webp"),
+      buildUploadCandidates("./uploads/img_0511.webp"),
+      buildUploadCandidates("./uploads/img_0513.webp")
     ];
     let sliderIndex = 0;
     const sliderImageEl = document.getElementById("sliderImage");
@@ -1023,22 +1074,7 @@
         return;
       }
 
-      let idx = 0;
-      const probe = new Image();
-      const tryNext = () => {
-        if (idx >= candidates.length) {
-          imgEl.src = candidates[0];
-          return;
-        }
-        const candidate = candidates[idx++];
-        probe.onload = () => {
-          imagePathCache.set(cacheKey, candidate);
-          imgEl.src = candidate;
-        };
-        probe.onerror = tryNext;
-        probe.src = candidate;
-      };
-      tryNext();
+      setImgWithFallback(imgEl, candidates, altText);
     }
 
     function renderSlider() {
@@ -1057,10 +1093,10 @@
     });
 
     const menSliderImages = [
-      ["./uploads/img_0517.webp", "./uploads/IMG_0517.webp"],
-      ["./uploads/img_0516.webp", "./uploads/IMG_0516.webp"],
-      ["./uploads/img_0515.webp", "./uploads/IMG_0515.webp"],
-      ["./uploads/img_0514.webp", "./uploads/IMG_0514.webp"]
+      buildUploadCandidates("./uploads/img_0517.webp"),
+      buildUploadCandidates("./uploads/img_0516.webp"),
+      buildUploadCandidates("./uploads/img_0515.webp"),
+      buildUploadCandidates("./uploads/img_0514.webp")
     ];
     let menSliderIndex = 0;
     const menSliderImageEl = document.getElementById("menSliderImage");
@@ -1080,6 +1116,11 @@
     menSliderNextEl?.addEventListener("click", () => {
       menSliderIndex = (menSliderIndex + 1) % menSliderImages.length;
       renderMenSlider();
+    });
+
+    document.querySelectorAll(".dress-colors .color").forEach((imgEl) => {
+      const src = imgEl.getAttribute("src");
+      if (src) setImgWithFallback(imgEl, buildUploadCandidates(src), imgEl.alt || "");
     });
 
     // Ensure first slide is explicitly rendered on load.
