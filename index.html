@@ -38,7 +38,7 @@
     body.invite-opened {
       background:
         linear-gradient(rgba(246, 251, 246, 0.72), rgba(246, 251, 246, 0.72)),
-        url("./uploads/img_0530.JPG") center/560px repeat;
+        url("./uploads/img_0530.jpg") center/560px repeat;
     }
 
     body.invite-locked {
@@ -306,14 +306,18 @@
 
     .hero {
       min-height: 100svh;
-      background:
-        linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.2)),
-        url("./uploads/hero.jpg") center/cover no-repeat;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.2));
       display: grid;
       place-items: end center;
       padding: 64px 20px;
       text-align: center;
       color: #fff;
+    }
+
+    body.invite-opened .hero {
+      background:
+        linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.2)),
+        url("./uploads/hero.jpg") center/cover no-repeat;
     }
 
     @media (min-width: 721px) {
@@ -368,6 +372,11 @@
 
     section {
       padding: 18px 0;
+    }
+
+    .screen-block {
+      content-visibility: auto;
+      contain-intrinsic-size: 900px;
     }
 
     .screen-block > .container {
@@ -470,7 +479,7 @@
       left: 50%;
       top: 50%;
       transform: translate(-50%, -48%);
-      font-size: 70px;
+      font-size: 56px;
       color: var(--heading-burgundy);
       opacity: 1;
       pointer-events: none;
@@ -865,7 +874,7 @@
     <div class="container reveal">
       <h2 class="reveal">План дня</h2>
       <div class="schedule">
-        <div class="event reveal delay-1"><div class="event-icon"><img src="https://static.tildacdn.com/tild3865-6337-4834-a564-366230326130/free-animated-icon-b.gif" alt="Иконка приветствия"></div><div class="event-main"><div class="time">14:30</div><div class="event-text">Сбор гостей</div></div></div>
+        <div class="event reveal delay-1"><div class="event-icon"><img src="https://static.tildacdn.com/tild3865-6337-4834-a564-366230326130/free-animated-icon-b.gif" alt="Иконка приветствия"></div><div class="event-main"><div class="time">14:30</div><div class="event-text">Встречаем гостей и бокал приветственного напитка</div></div></div>
         <div class="event reveal delay-1"><div class="event-icon"><img src="https://static.tildacdn.com/tild3434-3866-4563-b361-333033343134/free-animated-icon-r.gif" alt="Иконка церемонии"></div><div class="event-main"><div class="time">15:00</div><div class="event-text">Торжественная церемония</div></div></div>
         <div class="event reveal delay-2"><div class="event-icon"><img src="https://static.tildacdn.com/tild3532-6264-4363-a436-386235633239/free-animated-icon-t.gif" alt="Иконка фотосессии"></div><div class="event-main"><div class="time">15:30</div><div class="event-text">Фуршет, шампанское, фотосессия</div></div></div>
         <div class="event reveal delay-2"><div class="event-icon"><img src="https://static.tildacdn.com/tild3836-6462-4662-b766-363333626461/free-animated-icon-c.gif" alt="Иконка ужина"></div><div class="event-main"><div class="time">17:00</div><div class="event-text">Вкусный ужин, истории и игры</div></div></div>
@@ -879,12 +888,12 @@
       <h2 class="reveal">Dress Code</h2>
       <p class="lead reveal delay-1">Будем рады, если вы поддержите цветовую палитру праздника.</p>
       <div class="dress-colors reveal delay-2">
-        <img class="color" src="./uploads/fotor-20260430221910.png" alt="Пример dress code 1">
-        <img class="color" src="./uploads/img_0505.png" alt="Пример dress code 2">
-        <img class="color" src="./uploads/img_0532.png" alt="Пример dress code 3">
-        <img class="color" src="./uploads/img_0533.png" alt="Пример dress code 4">
-        <img class="color" src="./uploads/img_0539-fotor-20260430221932.png" alt="Пример dress code 5">
-        <img class="color" src="./uploads/img_0504.png" alt="Пример dress code 6">
+        <img class="color" src="./uploads/fotor-20260430221910.png" alt="Пример dress code 1" loading="lazy" decoding="async">
+        <img class="color" src="./uploads/img_0505.png" alt="Пример dress code 2" loading="lazy" decoding="async">
+        <img class="color" src="./uploads/img_0532.png" alt="Пример dress code 3" loading="lazy" decoding="async">
+        <img class="color" src="./uploads/img_0533.png" alt="Пример dress code 4" loading="lazy" decoding="async">
+        <img class="color" src="./uploads/img_0539-fotor-20260430221932.png" alt="Пример dress code 5" loading="lazy" decoding="async">
+        <img class="color" src="./uploads/img_0504.png" alt="Пример dress code 6" loading="lazy" decoding="async">
       </div>
     </div>
   </section>
@@ -895,7 +904,7 @@
       <div class="photo-slider reveal delay-1">
         <button class="slider-btn" id="sliderPrev" type="button" aria-label="Предыдущее фото">‹</button>
         <div class="slider-frame">
-          <img class="slider-image" id="sliderImage" src="./uploads/img_0509.JPG" alt="Фото 1">
+          <img class="slider-image" id="sliderImage" src="./uploads/IMG_0509.JPG" alt="Фото 1" loading="lazy" decoding="async">
         </div>
         <button class="slider-btn" id="sliderNext" type="button" aria-label="Следующее фото">›</button>
       </div>
@@ -908,7 +917,7 @@
       <div class="photo-slider reveal delay-1">
         <button class="slider-btn" id="menSliderPrev" type="button" aria-label="Предыдущее фото для мужчин">‹</button>
         <div class="slider-frame">
-          <img class="slider-image" id="menSliderImage" src="./uploads/img_0517.JPG" alt="Фото для мужчин 1">
+          <img class="slider-image" id="menSliderImage" src="./uploads/IMG_0517.JPG" alt="Фото для мужчин 1" loading="lazy" decoding="async">
         </div>
         <button class="slider-btn" id="menSliderNext" type="button" aria-label="Следующее фото для мужчин">›</button>
       </div>
@@ -993,20 +1002,48 @@
     const weddingDate = new Date("2026-07-24T14:00:00+07:00").getTime();
 
     const sliderImages = [
-      "./uploads/img_0509.JPG",
-      "./uploads/img_0510.PNG",
-      "./uploads/img_0511.JPG",
-      "./uploads/img_0513.JPG"
+      ["./uploads/IMG_0509.JPG", "./uploads/img_0509.jpg", "./uploads/IMG_0509.jpg", "./uploads/img_0509.JPG"],
+      ["./uploads/IMG_0510.PNG", "./uploads/img_0510.png", "./uploads/IMG_0510.png", "./uploads/img_0510.PNG"],
+      ["./uploads/IMG_0511.JPG", "./uploads/img_0511.jpg", "./uploads/IMG_0511.jpg", "./uploads/img_0511.JPG"],
+      ["./uploads/IMG_0513.JPG", "./uploads/img_0513.jpg", "./uploads/IMG_0513.jpg", "./uploads/img_0513.JPG"]
     ];
     let sliderIndex = 0;
     const sliderImageEl = document.getElementById("sliderImage");
     const sliderPrevEl = document.getElementById("sliderPrev");
     const sliderNextEl = document.getElementById("sliderNext");
+    const imagePathCache = new Map();
+
+    function applyFirstWorkingSource(imgEl, candidates, altText) {
+      if (!imgEl || !Array.isArray(candidates) || candidates.length === 0) return;
+      const cacheKey = candidates.join("|");
+      imgEl.alt = altText;
+
+      if (imagePathCache.has(cacheKey)) {
+        imgEl.src = imagePathCache.get(cacheKey);
+        return;
+      }
+
+      let idx = 0;
+      const probe = new Image();
+      const tryNext = () => {
+        if (idx >= candidates.length) {
+          imgEl.src = candidates[0];
+          return;
+        }
+        const candidate = candidates[idx++];
+        probe.onload = () => {
+          imagePathCache.set(cacheKey, candidate);
+          imgEl.src = candidate;
+        };
+        probe.onerror = tryNext;
+        probe.src = candidate;
+      };
+      tryNext();
+    }
 
     function renderSlider() {
       if (!sliderImageEl) return;
-      sliderImageEl.src = sliderImages[sliderIndex];
-      sliderImageEl.alt = `Фото ${sliderIndex + 1}`;
+      applyFirstWorkingSource(sliderImageEl, sliderImages[sliderIndex], `Фото ${sliderIndex + 1}`);
     }
 
     sliderPrevEl?.addEventListener("click", () => {
@@ -1020,10 +1057,10 @@
     });
 
     const menSliderImages = [
-      "./uploads/img_0517.JPG",
-      "./uploads/img_0516.JPG",
-      "./uploads/img_0515.JPG",
-      "./uploads/img_0514.JPG"
+      ["./uploads/IMG_0517.JPG", "./uploads/img_0517.jpg", "./uploads/IMG_0517.jpg", "./uploads/img_0517.JPG"],
+      ["./uploads/IMG_0516.JPG", "./uploads/img_0516.jpg", "./uploads/IMG_0516.jpg", "./uploads/img_0516.JPG"],
+      ["./uploads/IMG_0515.JPG", "./uploads/img_0515.jpg", "./uploads/IMG_0515.jpg", "./uploads/img_0515.JPG"],
+      ["./uploads/IMG_0514.JPG", "./uploads/img_0514.jpg", "./uploads/IMG_0514.jpg", "./uploads/img_0514.JPG"]
     ];
     let menSliderIndex = 0;
     const menSliderImageEl = document.getElementById("menSliderImage");
@@ -1032,8 +1069,7 @@
 
     function renderMenSlider() {
       if (!menSliderImageEl) return;
-      menSliderImageEl.src = menSliderImages[menSliderIndex];
-      menSliderImageEl.alt = `Фото для мужчин ${menSliderIndex + 1}`;
+      applyFirstWorkingSource(menSliderImageEl, menSliderImages[menSliderIndex], `Фото для мужчин ${menSliderIndex + 1}`);
     }
 
     menSliderPrevEl?.addEventListener("click", () => {
@@ -1045,6 +1081,10 @@
       menSliderIndex = (menSliderIndex + 1) % menSliderImages.length;
       renderMenSlider();
     });
+
+    // Ensure first slide is explicitly rendered on load.
+    renderSlider();
+    renderMenSlider();
 
     function updateCountdown() {
       const now = Date.now();
