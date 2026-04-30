@@ -1,0 +1,1077 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Свадебное приглашение</title>
+  <meta name="description" content="Приглашение на свадьбу">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Montserrat:wght@300;400;500;700&family=Parisienne&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #edf7ee;
+      --card: #ffffff;
+      --accent: #6f9a76;
+      --text: #2f3a31;
+      --muted: #718075;
+      --heading-burgundy: #7b3448;
+      --invite-frame-ratio: 13 / 16;
+      --invite-frame-width: min(98vw, 780px);
+      --invite-frame-max-height: 100svh;
+      --page-frame-width: var(--invite-frame-width);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Montserrat", sans-serif;
+      color: var(--text);
+      background: #fff;
+      line-height: 1.5;
+    }
+
+    body.invite-opened {
+      background:
+        linear-gradient(rgba(246, 251, 246, 0.72), rgba(246, 251, 246, 0.72)),
+        url("./uploads/img_0530.JPG") center/560px repeat;
+    }
+
+    body.invite-locked {
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    .invite-cover {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: transparent;
+      display: grid;
+      place-items: start center;
+      padding: 0;
+      transition: opacity .55s ease .45s, visibility .55s ease .45s;
+    }
+
+    .invite-envelope {
+      position: relative;
+      width: var(--invite-frame-width);
+      aspect-ratio: var(--invite-frame-ratio);
+      max-height: var(--invite-frame-max-height);
+      height: auto;
+      border-radius: 24px;
+      overflow: hidden;
+      background: transparent;
+      box-shadow: none;
+      border: none;
+    }
+
+    .invite-cover.is-opening .invite-panel-left {
+      transform: translateX(-102%);
+    }
+
+    .invite-cover.is-opening .invite-panel-right {
+      transform: translateX(102%);
+    }
+
+    .invite-cover.is-opening .invite-seal {
+      transform: translate(-50%, -50%) scale(.9);
+      opacity: 0;
+    }
+
+    .invite-cover.is-opening .invite-hint {
+      opacity: 0;
+    }
+
+    .invite-cover.is-opening .invite-content {
+      opacity: 0;
+    }
+
+    .invite-cover.is-hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .invite-panel {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      background:
+        linear-gradient(rgba(238, 247, 239, 0.68), rgba(238, 247, 239, 0.55)),
+        url("./uploads/pattern.jpg") center/cover no-repeat;
+      transition: transform 1.05s cubic-bezier(.25, .8, .2, 1);
+      box-shadow: inset 0 0 0 1px rgba(111, 154, 118, 0.16);
+      border-radius: 0;
+    }
+
+    .invite-panel-left {
+      left: 0;
+      border-right: 1px solid rgba(111, 154, 118, 0.2);
+      background:
+        linear-gradient(rgba(246, 242, 235, 0.58), rgba(246, 242, 235, 0.58)),
+        url("./uploads/img_0528-fotor-20260430221018.png") center/cover no-repeat;
+    }
+
+    .invite-panel-right {
+      right: 0;
+      border-left: 1px solid rgba(111, 154, 118, 0.2);
+      background:
+        linear-gradient(rgba(246, 242, 235, 0.58), rgba(246, 242, 235, 0.58)),
+        url("./uploads/img_0528-fotor-20260430221150.png") center/cover no-repeat;
+    }
+
+    .invite-big {
+      position: absolute;
+      font-family: "Parisienne", cursive;
+      font-weight: 400;
+      line-height: .8;
+      letter-spacing: 0;
+      color: #6f2b3d;
+      text-shadow: 0 1px 1px rgba(79, 22, 36, 0.2);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .invite-big-left {
+      left: 16px;
+      top: 60px;
+      font-size: clamp(126px, 17.5vw, 260px);
+    }
+
+    .invite-big-right {
+      right: 34px;
+      bottom: 42px;
+      font-size: clamp(126px, 17.5vw, 260px);
+    }
+
+    .invite-vertical {
+      position: absolute;
+      left: 28px;
+      bottom: 26px;
+      font-family: "Montserrat", sans-serif;
+      font-weight: 700;
+      font-size: clamp(34px, 4.4vw, 62px);
+      letter-spacing: 2px;
+      color: rgba(145, 176, 149, 0.24);
+      transform: rotate(-90deg);
+      transform-origin: left bottom;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .invite-content {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      transition: opacity .3s ease;
+    }
+
+    .invite-title {
+      position: absolute;
+      left: 75%;
+      top: 40%;
+      transform: translate(-50%, -50%);
+      width: min(40vw, 320px);
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(26px, 3.2vw, 40px);
+      letter-spacing: 1px;
+      line-height: 1.08;
+      font-weight: 600;
+      color: var(--heading-burgundy);
+      text-align: left;
+      user-select: none;
+    }
+
+    .invite-hint {
+      position: absolute;
+      left: calc(50% - clamp(72px, 11vw, 118px));
+      top: 75%;
+      transform: translate(-100%, -50%);
+      font-size: clamp(16px, 1.9vw, 24px);
+      color: #6fae7b;
+      line-height: 1.25;
+      transition: opacity .35s ease;
+      user-select: none;
+      text-align: right;
+    }
+
+    .invite-seal {
+      position: absolute;
+      left: 50%;
+      top: 75%;
+      transform: translate(-50%, -50%);
+      width: clamp(120px, 17vw, 216px);
+      height: clamp(120px, 17vw, 216px);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      background:
+        url("./uploads/img.jpg") center/cover no-repeat;
+      box-shadow: 0 10px 24px rgba(66, 40, 46, 0.35);
+      transition: transform .35s ease, opacity .35s ease;
+      pointer-events: auto;
+    }
+
+    @media (min-width: 721px) {
+      .invite-seal {
+        width: clamp(94px, 12.8vw, 158px);
+        height: clamp(94px, 12.8vw, 158px);
+      }
+    }
+
+    .invite-seal::before {
+      content: none;
+    }
+
+    .invite-seal::after {
+      content: none;
+    }
+
+    @media (max-width: 720px) {
+      .invite-cover {
+        place-items: start stretch;
+      }
+      .invite-envelope {
+        width: 100vw;
+        max-width: 100vw;
+        height: 100svh;
+        max-height: 100svh;
+        aspect-ratio: auto;
+        border-radius: 0;
+      }
+      .invite-big-left {
+        left: 22px;
+        top: 62px;
+        font-size: clamp(108px, 30vw, 190px);
+      }
+      .invite-big-right {
+        right: 22px;
+        bottom: 56px;
+        font-size: clamp(108px, 30vw, 190px);
+      }
+      .invite-title {
+        left: 75%;
+        top: 40%;
+        transform: translate(-50%, -50%);
+        width: min(44vw, 220px);
+        font-size: clamp(20px, 5.2vw, 28px);
+      }
+      .invite-hint {
+        left: calc(50% - clamp(56px, 14vw, 76px));
+        top: 60%;
+        transform: translate(-100%, -50%);
+        font-size: clamp(14px, 4.2vw, 18px);
+        text-align: right;
+      }
+      .invite-vertical {
+        left: 16px;
+        bottom: 20px;
+      }
+      .invite-seal {
+        top: 60%;
+      }
+    }
+
+    .container {
+      width: var(--page-frame-width);
+      max-width: 98vw;
+      margin: 0 auto;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .85s ease, transform .85s ease;
+      will-change: opacity, transform;
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .delay-1 { transition-delay: .08s; }
+    .delay-2 { transition-delay: .16s; }
+    .delay-3 { transition-delay: .24s; }
+
+    .hero {
+      min-height: 100svh;
+      background:
+        linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.2)),
+        url("./uploads/hero.jpg") center/cover no-repeat;
+      display: grid;
+      place-items: end center;
+      padding: 64px 20px;
+      text-align: center;
+      color: #fff;
+    }
+
+    @media (min-width: 721px) {
+      .hero {
+        min-height: auto;
+        width: var(--invite-frame-width);
+        aspect-ratio: var(--invite-frame-ratio);
+        max-height: var(--invite-frame-max-height);
+        height: auto;
+        margin: 0 auto;
+        border-radius: 24px;
+        overflow: hidden;
+      }
+    }
+
+    .names {
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(52px, 12vw, 100px);
+      margin: 0;
+      line-height: 1;
+      font-weight: 400;
+      color: #fff;
+    }
+
+    .hero-sub {
+      margin: 14px 0 0;
+      font-size: clamp(16px, 3.7vw, 24px);
+      letter-spacing: 1px;
+    }
+
+    .date-badge {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 18px;
+      border: 1px solid #fff;
+      border-radius: 999px;
+      font-weight: 500;
+      font-size: 14px;
+      animation: fadeInUp 1s ease .25s both;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    section {
+      padding: 18px 0;
+    }
+
+    .screen-block > .container {
+      width: var(--page-frame-width);
+      max-width: 98vw;
+      margin: 0 auto;
+      border-radius: 40px;
+      padding: 44px 20px;
+      box-shadow: 0 8px 24px rgba(47, 58, 49, 0.08);
+      border: 2px solid rgba(123, 52, 72, 0.62);
+    }
+
+    .screen-green > .container {
+      background: #fff;
+    }
+
+    .screen-white > .container {
+      background: #fff;
+    }
+
+    .block-stack {
+      display: grid;
+      gap: 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.06);
+    }
+
+    .calendar-section {
+      background: transparent;
+      padding: 0;
+      width: 100%;
+      margin: 0;
+      border-radius: 0;
+    }
+
+    .calendar-wrap {
+      text-align: center;
+    }
+
+    .calendar-title {
+      margin: 0 0 24px;
+      color: var(--heading-burgundy);
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(46px, 10vw, 72px);
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .calendar-card {
+      max-width: 420px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 22px;
+      padding: 24px 20px;
+      box-shadow: 0 10px 28px rgba(88, 133, 96, 0.12);
+    }
+
+    .calendar-month {
+      text-align: left;
+      margin: 0 0 12px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 40px;
+      color: #354338;
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px 8px;
+      text-align: center;
+      font-size: 20px;
+      color: #354338;
+    }
+
+    .weekday {
+      font-size: 16px;
+      color: #6f7d72;
+      font-weight: 400;
+    }
+
+    .selected-day {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6f9a76;
+      font-weight: 700;
+    }
+
+    .selected-day::before {
+      content: "♡";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -48%);
+      font-size: 70px;
+      color: var(--heading-burgundy);
+      opacity: 1;
+      pointer-events: none;
+    }
+
+    .calendar-date {
+      margin: 30px 0 0;
+      color: #7aa082;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(52px, 10vw, 70px);
+      font-style: italic;
+      line-height: 1;
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      text-align: center;
+      color: var(--heading-burgundy);
+      font-size: clamp(46px, 10vw, 72px);
+      font-family: "Great Vibes", cursive;
+      font-weight: 400;
+    }
+
+    p.lead {
+      margin: 0 auto;
+      text-align: center;
+      max-width: 700px;
+      color: var(--muted);
+    }
+
+    .countdown {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      text-align: center;
+    }
+
+    .count-item {
+      background: #fff;
+      border: 1px solid #dfeee2;
+      border-radius: 14px;
+      padding: 16px 10px;
+    }
+
+    .count-value {
+      font-size: clamp(24px, 5vw, 36px);
+      color: var(--accent);
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .count-label {
+      margin-top: 7px;
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+    }
+
+    .schedule {
+      margin: 22px auto 0;
+      display: grid;
+      gap: 26px;
+      width: min(100%, 460px);
+      max-width: 460px;
+      justify-items: stretch;
+    }
+
+    .event {
+      display: grid;
+      grid-template-columns: 94px 1fr;
+      gap: 20px;
+      align-items: start;
+      width: 100%;
+      margin: 0;
+    }
+
+    .event-icon {
+      width: 94px;
+      height: 94px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .event-icon img {
+      width: 84px;
+      height: 84px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .event-main {
+      display: grid;
+      gap: 8px;
+      align-content: start;
+      padding-top: 0;
+      text-align: left;
+      justify-items: start;
+      max-width: 400px;
+    }
+
+    .time {
+      color: #454545;
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 400;
+      font-size: 46px;
+      line-height: .85;
+      letter-spacing: .5px;
+    }
+
+    .event-text {
+      color: #3f3f3f;
+      font-size: 18px;
+      line-height: 1.18;
+    }
+
+    .dress-colors {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .color {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      object-fit: cover;
+      border: none;
+      box-shadow: none;
+      background: transparent;
+      display: block;
+    }
+
+    .gallery {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .gallery img {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    .photo-slider {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: 56px minmax(0, 1fr) 56px;
+      align-items: center;
+      gap: 16px;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .slider-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(123, 52, 72, 0.62);
+      background: #fff;
+      color: var(--heading-burgundy);
+      font-size: 30px;
+      line-height: 1;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      padding: 0;
+    }
+
+    .slider-frame {
+      width: 100%;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #f5f5f5;
+      box-shadow: 0 8px 24px rgba(47, 58, 49, 0.12);
+    }
+
+    .slider-image {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: contain;
+      background: #f8f8f6;
+      display: block;
+    }
+
+    .location-actions {
+      margin-top: 14px;
+      text-align: center;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 11px 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      transition: .2s ease;
+      font-weight: 500;
+    }
+
+    .btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .rsvp {
+      display: grid;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    input, select, textarea, button {
+      font: inherit;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      background: #fff;
+    }
+
+    button[type="submit"] {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      cursor: pointer;
+    }
+
+    footer {
+      width: var(--page-frame-width);
+      max-width: 98vw;
+      margin: 0 auto;
+      text-align: center;
+      color: #888;
+      font-size: 14px;
+      padding: 30px 0 50px;
+    }
+
+    @media (max-width: 720px) {
+      section {
+        padding: 10px 0;
+      }
+      .screen-block > .container {
+        width: 96vw;
+        max-width: 96vw;
+        border-radius: 28px;
+        padding-top: 36px;
+        padding-bottom: 36px;
+        box-shadow: none;
+      }
+      .container,
+      footer {
+        width: 96vw;
+        max-width: 96vw;
+        border-radius: 28px;
+      }
+      .countdown { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .dress-colors {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 380px;
+      }
+      .gallery { grid-template-columns: 1fr; }
+      .gallery img { height: 230px; }
+      .photo-slider {
+        grid-template-columns: 46px minmax(0, 1fr) 46px;
+        gap: 10px;
+        max-width: 360px;
+      }
+      .slider-btn {
+        width: 46px;
+        height: 46px;
+        font-size: 26px;
+      }
+      .event {
+        grid-template-columns: 78px 1fr;
+        gap: 16px;
+      }
+      .event-icon {
+        width: 78px;
+        height: 78px;
+      }
+      .event-icon img {
+        width: 70px;
+        height: 70px;
+      }
+      .time {
+        font-size: 38px;
+      }
+      .event-text {
+        font-size: 18px;
+      }
+      .event-main {
+        max-width: 280px;
+      }
+      .schedule {
+        width: min(100%, 420px);
+        max-width: 420px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="invite-cover" id="inviteCover" aria-hidden="true">
+    <div class="invite-envelope">
+      <div class="invite-panel invite-panel-left">
+        <div class="invite-big invite-big-left">N</div>
+        <div class="invite-vertical">WEDDING DAY</div>
+      </div>
+      <div class="invite-panel invite-panel-right">
+        <div class="invite-big invite-big-right">M</div>
+      </div>
+      <div class="invite-content">
+        <div class="invite-title">ПРИГЛАШЕНИЕ<br>НА СВАДЬБУ</div>
+        <div class="invite-hint">нажмите,<br>чтобы открыть</div>
+        <button class="invite-seal" id="inviteSeal" type="button" aria-label="Открыть приглашение"></button>
+      </div>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div>
+        <h1 class="names" style="animation: fadeInUp 1.15s ease .12s both;">Никита &amp; Мария</h1>
+    </div>
+  </header>
+
+  <section class="screen-block screen-green">
+    <div class="container reveal block-stack">
+      <div class="card reveal delay-1">
+        <h2>Дорогие родные и друзья!</h2>
+        <p class="lead">
+          Мы будем счастливы разделить с вами один из самых важных дней нашей жизни.
+          Ждем вас на свадебном торжестве!
+        </p>
+      </div>
+      <div class="calendar-section">
+        <div class="calendar-wrap reveal">
+          <p class="calendar-title reveal delay-1">Мы ждём вас</p>
+          <div class="calendar-card reveal delay-2">
+            <p class="calendar-month">Июль</p>
+            <div class="calendar-grid">
+              <div class="weekday">ПН</div><div class="weekday">ВТ</div><div class="weekday">СР</div><div class="weekday">ЧТ</div><div class="weekday">ПТ</div><div class="weekday">СБ</div><div class="weekday">ВС</div>
+              <div></div><div></div><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div>
+              <div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div>12</div>
+              <div>13</div><div>14</div><div>15</div><div>16</div><div>17</div><div>18</div><div>19</div>
+              <div>20</div><div>21</div><div>22</div><div>23</div><div class="selected-day">24</div><div>25</div><div>26</div>
+              <div>27</div><div>28</div><div>29</div><div>30</div><div>31</div><div></div><div></div>
+            </div>
+          </div>
+          <p class="calendar-date reveal delay-3">24 / 07 / 26</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen-block screen-white">
+    <div class="container reveal block-stack">
+      <div>
+        <h2 class="reveal">Локация</h2>
+        <p class="lead reveal delay-1">База отдыха «Притомье»</p>
+        <div class="location-actions reveal delay-2">
+          <a class="btn" target="_blank" href="https://yandex.ru/maps/org/baza_otdykha_pritomye/1036702983/?ll=86.292355%2C55.217670&z=17">Открыть маршрут</a>
+        </div>
+      </div>
+      <div>
+        <h2 class="reveal">До начала торжества</h2>
+        <div class="countdown reveal delay-1" id="countdown">
+          <div class="count-item"><div class="count-value" id="d">00</div><div class="count-label">Дней</div></div>
+          <div class="count-item"><div class="count-value" id="h">00</div><div class="count-label">Часов</div></div>
+          <div class="count-item"><div class="count-value" id="m">00</div><div class="count-label">Минут</div></div>
+          <div class="count-item"><div class="count-value" id="s">00</div><div class="count-label">Секунд</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen-block screen-white">
+    <div class="container reveal">
+      <h2 class="reveal">План дня</h2>
+      <div class="schedule">
+        <div class="event reveal delay-1"><div class="event-icon"><img src="https://static.tildacdn.com/tild3865-6337-4834-a564-366230326130/free-animated-icon-b.gif" alt="Иконка приветствия"></div><div class="event-main"><div class="time">14:30</div><div class="event-text">Сбор гостей</div></div></div>
+        <div class="event reveal delay-1"><div class="event-icon"><img src="https://static.tildacdn.com/tild3434-3866-4563-b361-333033343134/free-animated-icon-r.gif" alt="Иконка церемонии"></div><div class="event-main"><div class="time">15:00</div><div class="event-text">Торжественная церемония</div></div></div>
+        <div class="event reveal delay-2"><div class="event-icon"><img src="https://static.tildacdn.com/tild3532-6264-4363-a436-386235633239/free-animated-icon-t.gif" alt="Иконка фотосессии"></div><div class="event-main"><div class="time">15:30</div><div class="event-text">Фуршет, шампанское, фотосессия</div></div></div>
+        <div class="event reveal delay-2"><div class="event-icon"><img src="https://static.tildacdn.com/tild3836-6462-4662-b766-363333626461/free-animated-icon-c.gif" alt="Иконка ужина"></div><div class="event-main"><div class="time">17:00</div><div class="event-text">Вкусный ужин, истории и игры</div></div></div>
+        <div class="event reveal delay-3"><div class="event-icon"><img src="https://static.tildacdn.com/tild3763-6635-4233-b633-666665353438/free-animated-icon-f.gif" alt="Иконка завершения вечера"></div><div class="event-main"><div class="time">22:00</div><div class="event-text">Завершение вечера и танцы</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen-block screen-white">
+    <div class="container reveal">
+      <h2 class="reveal">Dress Code</h2>
+      <p class="lead reveal delay-1">Будем рады, если вы поддержите цветовую палитру праздника.</p>
+      <div class="dress-colors reveal delay-2">
+        <img class="color" src="./uploads/fotor-20260430221910.png" alt="Пример dress code 1">
+        <img class="color" src="./uploads/img_0505.png" alt="Пример dress code 2">
+        <img class="color" src="./uploads/img_0532.png" alt="Пример dress code 3">
+        <img class="color" src="./uploads/img_0533.png" alt="Пример dress code 4">
+        <img class="color" src="./uploads/img_0539-fotor-20260430221932.png" alt="Пример dress code 5">
+        <img class="color" src="./uploads/img_0504.png" alt="Пример dress code 6">
+      </div>
+    </div>
+  </section>
+
+  <section class="screen-block screen-white">
+    <div class="container reveal">
+      <h2 class="reveal">Для девушек</h2>
+      <div class="photo-slider reveal delay-1">
+        <button class="slider-btn" id="sliderPrev" type="button" aria-label="Предыдущее фото">‹</button>
+        <div class="slider-frame">
+          <img class="slider-image" id="sliderImage" src="./uploads/img_0509.JPG" alt="Фото 1">
+        </div>
+        <button class="slider-btn" id="sliderNext" type="button" aria-label="Следующее фото">›</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen-block screen-white">
+    <div class="container reveal">
+      <h2 class="reveal">Для мужчин</h2>
+      <div class="photo-slider reveal delay-1">
+        <button class="slider-btn" id="menSliderPrev" type="button" aria-label="Предыдущее фото для мужчин">‹</button>
+        <div class="slider-frame">
+          <img class="slider-image" id="menSliderImage" src="./uploads/img_0517.JPG" alt="Фото для мужчин 1">
+        </div>
+        <button class="slider-btn" id="menSliderNext" type="button" aria-label="Следующее фото для мужчин">›</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen-block screen-white">
+    <div class="container reveal block-stack">
+      <div class="card reveal">
+        <h2 class="reveal">Чат гостей</h2>
+        <p class="lead reveal delay-1">
+          Предлагаем вступить в чат гостей, здесь можно обмениваться фото и видео со свадьбы.
+        </p>
+        <div class="location-actions reveal delay-2">
+          <a class="btn" target="_blank" href="https://max.ru/join/xzf-6k3YJQWW8VkjgZNnyUd3Jv8yBMz2NafSWzZn30c">Вступить</a>
+        </div>
+      </div>
+      <div class="card reveal">
+        <p class="lead reveal">
+          Если вы хотите сделать сюрприз,<br>
+          вы можете обратиться к нашему организатору, Вадиму<br>
+          <a href="tel:+79234774820">+7(923)4774820</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    С любовью, Никита и Мария
+  </footer>
+
+  <script>
+    const inviteCover = document.getElementById("inviteCover");
+    const inviteSeal = document.getElementById("inviteSeal");
+    const inviteAudio = new Audio("./uploads/ready.mp3.mp3");
+    inviteAudio.preload = "auto";
+    const inviteAudioTargetVolume = 0.35;
+    inviteAudio.volume = 0.02;
+
+    function fadeInInviteAudio(durationMs = 3200) {
+      const startVolume = 0.02;
+      const targetVolume = inviteAudioTargetVolume;
+      const startTime = performance.now();
+      inviteAudio.volume = startVolume;
+
+      function step(now) {
+        const progress = Math.min(1, (now - startTime) / durationMs);
+        inviteAudio.volume = startVolume + (targetVolume - startVolume) * progress;
+        if (progress < 1) requestAnimationFrame(step);
+      }
+
+      requestAnimationFrame(step);
+    }
+
+    function openInviteCover(withAnimation = true) {
+      if (!inviteCover) return;
+      if (withAnimation) {
+        inviteCover.classList.add("is-opening");
+        setTimeout(() => inviteCover.classList.add("is-hidden"), 1020);
+      } else {
+        inviteCover.classList.add("is-hidden");
+      }
+      document.body.classList.add("invite-opened");
+      // Always show the invitation from the top after opening curtains.
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      document.body.classList.remove("invite-locked");
+    }
+
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    document.body.classList.add("invite-locked");
+    inviteSeal?.addEventListener("click", () => {
+      inviteAudio.currentTime = 0;
+      inviteAudio.play().then(() => {
+        fadeInInviteAudio();
+      }).catch(() => {});
+      openInviteCover(true);
+    });
+
+    const weddingDate = new Date("2026-07-24T14:00:00+07:00").getTime();
+
+    const sliderImages = [
+      "./uploads/img_0509.JPG",
+      "./uploads/img_0510.PNG",
+      "./uploads/img_0511.JPG",
+      "./uploads/img_0513.JPG"
+    ];
+    let sliderIndex = 0;
+    const sliderImageEl = document.getElementById("sliderImage");
+    const sliderPrevEl = document.getElementById("sliderPrev");
+    const sliderNextEl = document.getElementById("sliderNext");
+
+    function renderSlider() {
+      if (!sliderImageEl) return;
+      sliderImageEl.src = sliderImages[sliderIndex];
+      sliderImageEl.alt = `Фото ${sliderIndex + 1}`;
+    }
+
+    sliderPrevEl?.addEventListener("click", () => {
+      sliderIndex = (sliderIndex - 1 + sliderImages.length) % sliderImages.length;
+      renderSlider();
+    });
+
+    sliderNextEl?.addEventListener("click", () => {
+      sliderIndex = (sliderIndex + 1) % sliderImages.length;
+      renderSlider();
+    });
+
+    const menSliderImages = [
+      "./uploads/img_0517.JPG",
+      "./uploads/img_0516.JPG",
+      "./uploads/img_0515.JPG",
+      "./uploads/img_0514.JPG"
+    ];
+    let menSliderIndex = 0;
+    const menSliderImageEl = document.getElementById("menSliderImage");
+    const menSliderPrevEl = document.getElementById("menSliderPrev");
+    const menSliderNextEl = document.getElementById("menSliderNext");
+
+    function renderMenSlider() {
+      if (!menSliderImageEl) return;
+      menSliderImageEl.src = menSliderImages[menSliderIndex];
+      menSliderImageEl.alt = `Фото для мужчин ${menSliderIndex + 1}`;
+    }
+
+    menSliderPrevEl?.addEventListener("click", () => {
+      menSliderIndex = (menSliderIndex - 1 + menSliderImages.length) % menSliderImages.length;
+      renderMenSlider();
+    });
+
+    menSliderNextEl?.addEventListener("click", () => {
+      menSliderIndex = (menSliderIndex + 1) % menSliderImages.length;
+      renderMenSlider();
+    });
+
+    function updateCountdown() {
+      const now = Date.now();
+      const diff = Math.max(0, weddingDate - now);
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const mins = Math.floor((diff / (1000 * 60)) % 60);
+      const secs = Math.floor((diff / 1000) % 60);
+
+      document.getElementById("d").textContent = String(days).padStart(2, "0");
+      document.getElementById("h").textContent = String(hours).padStart(2, "0");
+      document.getElementById("m").textContent = String(mins).padStart(2, "0");
+      document.getElementById("s").textContent = String(secs).padStart(2, "0");
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    const reveals = document.querySelectorAll(".reveal");
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.16 });
+
+    reveals.forEach((el) => observer.observe(el));
+  </script>
+</body>
+</html>
