@@ -1051,6 +1051,17 @@
       openInviteCover(true);
     });
 
+    const heroScrollDown = document.getElementById("heroScrollDown");
+    heroScrollDown?.addEventListener("click", () => {
+      const hero = document.querySelector(".hero");
+      const next = hero?.nextElementSibling;
+      if (next instanceof HTMLElement) {
+        next.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        window.scrollBy({ top: Math.min(window.innerHeight * 0.9, 800), behavior: "smooth" });
+      }
+    });
+    
     const weddingDate = new Date("2026-07-24T14:00:00+07:00").getTime();
 
     const sliderImages = [
