@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta property="og:image" content="./uploads/a3504616-1a61-47b6-a260-0647ac832ffe.jpg">
   <title>Свадебное приглашение</title>
   <meta name="description" content="Приглашение на свадьбу">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -196,7 +195,7 @@
     .invite-hint {
       position: absolute;
       left: calc(50% - clamp(72px, 11vw, 118px));
-      top: 77%;
+      top: 79%;
       transform: translate(-100%, -50%);
       font-size: clamp(16px, 1.9vw, 24px);
       color: #6fae7b;
@@ -306,11 +305,12 @@
     .delay-3 { transition-delay: .24s; }
 
     .hero {
+      position: relative;
       min-height: 100svh;
       background: linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.2));
       display: grid;
       place-items: end center;
-      padding: 64px 20px;
+      padding: 64px 20px 88px;
       text-align: center;
       color: #fff;
     }
@@ -319,6 +319,47 @@
       background:
         linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.2)),
         url("./uploads/hero.webp") center/cover no-repeat;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
+      background: rgba(0, 0, 0, 0.22);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      padding: 0;
+      animation: heroScrollBounce 1.6s ease-in-out infinite;
+      z-index: 2;
+    }
+
+    body.invite-locked .hero-scroll {
+      display: none;
+    }
+
+    .hero-scroll:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 3px;
+    }
+
+    .hero-scroll-icon {
+      width: 10px;
+      height: 10px;
+      border-right: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: translateY(-2px) rotate(45deg);
+    }
+
+    @keyframes heroScrollBounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
     }
 
     @media (min-width: 721px) {
@@ -331,6 +372,10 @@
         margin: 0 auto;
         border-radius: 24px;
         overflow: hidden;
+        padding-bottom: 80px;
+      }
+      .hero-scroll {
+        bottom: 18px;
       }
     }
 
@@ -819,6 +864,9 @@
     <div>
         <h1 class="names" style="animation: fadeInUp 1.15s ease .12s both;">Никита &amp; Мария</h1>
     </div>
+    <button class="hero-scroll" id="heroScrollDown" type="button" aria-label="Прокрутить вниз">
+      <span class="hero-scroll-icon" aria-hidden="true"></span>
+    </button>
   </header>
 
   <section class="screen-block screen-green">
@@ -875,7 +923,7 @@
     <div class="container reveal">
       <h2 class="reveal">План дня</h2>
       <div class="schedule">
-        <div class="event reveal delay-1"><div class="event-icon"><img src="https://static.tildacdn.com/tild3865-6337-4834-a564-366230326130/free-animated-icon-b.gif" alt="Иконка приветствия"></div><div class="event-main"><div class="time">14:30</div><div class="event-text">Сбор гостей</div></div></div>
+        <div class="event reveal delay-1"><div class="event-icon"><img src="https://static.tildacdn.com/tild3865-6337-4834-a564-366230326130/free-animated-icon-b.gif" alt="Иконка приветствия"></div><div class="event-main"><div class="time">14:30</div><div class="event-text">Встречаем гостей и бокал приветственного напитка</div></div></div>
         <div class="event reveal delay-1"><div class="event-icon"><img src="https://static.tildacdn.com/tild3434-3866-4563-b361-333033343134/free-animated-icon-r.gif" alt="Иконка церемонии"></div><div class="event-main"><div class="time">15:00</div><div class="event-text">Торжественная церемония</div></div></div>
         <div class="event reveal delay-2"><div class="event-icon"><img src="https://static.tildacdn.com/tild3532-6264-4363-a436-386235633239/free-animated-icon-t.gif" alt="Иконка фотосессии"></div><div class="event-main"><div class="time">15:30</div><div class="event-text">Фуршет, шампанское, фотосессия</div></div></div>
         <div class="event reveal delay-2"><div class="event-icon"><img src="https://static.tildacdn.com/tild3836-6462-4662-b766-363333626461/free-animated-icon-c.gif" alt="Иконка ужина"></div><div class="event-main"><div class="time">17:00</div><div class="event-text">Вкусный ужин, истории и игры</div></div></div>
@@ -1061,7 +1109,7 @@
         window.scrollBy({ top: Math.min(window.innerHeight * 0.9, 800), behavior: "smooth" });
       }
     });
-    
+
     const weddingDate = new Date("2026-07-24T14:00:00+07:00").getTime();
 
     const sliderImages = [
